@@ -1,25 +1,38 @@
-import logo from './logo.svg';
+import React, {useState} from 'react';
+import VideoInputForm from "./components/VideoInputForm";
+import VideoOutput from "./components/VideoOutput";
 import './App.css';
 
-function App() {
-  return (
+export default function App() {
+  const [vidURL, setVidURL] = useState("");
+  const [hasVid, setVid] = useState(false);
+  
+  function processVid(vidFile){
+    const reader = new FileReader();
+    reader.onload = function(){
+      setVidURL(reader.result);
+    };
+
+    reader.readAsDataURL(vidFile[0]);
+  }
+    
+  
+
+  const hasVidTemplate = (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Lifting Form Evaluator</h1>
+      <VideoOutput vidURL={vidURL}/>
+      <VideoInputForm processVid={processVid}  hasVid={hasVid} setVid={setVid}/>
     </div>
   );
+
+  const noVidTemplate = (
+    <div className="App">
+      <h1>Lifting Form Evaluator</h1>
+      <VideoInputForm processVid={processVid} hasVid={hasVid} setVid={setVid}/>
+    </div>
+  );
+  
+  return (hasVid? hasVidTemplate : noVidTemplate);
 }
 
-export default App;
