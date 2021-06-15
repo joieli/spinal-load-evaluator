@@ -1,23 +1,41 @@
 import React from 'react';
 import noise from "./noise.mp4";
 import loading from './loading.gif';
+import VideoOutput from './VideoOutput';
 
 export default function VideoInputForm(props){ 
-    function handleSubmit(event)
+    
+    async function processVid(vidFile){
+        let result = await new Promise(
+            (resolve) => {
+                let reader = new FileReader();
+                reader.onload = (e) => resolve(reader.result);
+                reader.readAsDataURL(vidFile[0]);
+            }
+        )
+
+        return result;
+    }
+    
+    async function handleSubmit(event)
     {
         event.preventDefault();
         let vid = document.querySelector("input[type=file]");
         let submit = document.querySelector("button[type=submit]");
-        let mass = document.querySelector("#mass");
-        if(vid.value !== "" && mass.value !== "")
-        {
-            //props.setMass(mass.value); <-- this line messes things up . . .
-            submit.setAttribute("disabled", '');
-            props.processVid(vid.files);     
-            props.setVid(true);
-            vid.value = "";
-            mass.value = "";
-        }
+        let massInput = document.querySelector("#mass");
+
+        if(vid.value === "" || massInput.value ==="")
+            return;
+        
+        submit.setAttribute("disabled", '');
+        let mass = massInput.value;
+        let vidURL = await processVid(vid.files);
+        
+        props.setVid(true);
+        vid.value = "";
+        massInput.value = "";
+        VideoOutput(vidURL, mass);
+        
     }
     
     const noVidTemplate = (
@@ -46,7 +64,7 @@ export default function VideoInputForm(props){
                 <input type="number" id="mass" name="mass" />
             </div> 
             <div className="input_line">
-                <label htmlFor="videoFile">Upload a video: </label>
+                <label htmlFor="videoFile">Upload a new video: </label>
                 <input type="file" id="videoFile" name="videoFile"/>
                 <button type="submit" disabled>Submit</button>
             </div>

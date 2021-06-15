@@ -5,7 +5,7 @@ import CalculateSpinalLoad from './SpinalLoadingCalculator';
 
 let poses;
 
-export default function VideoOutput(props)
+export default function VideoOutput(vidURL, mass)
 {   
     let curVideo = document.querySelector("video");
     if(curVideo !== null)
@@ -17,15 +17,14 @@ export default function VideoOutput(props)
     }
     
     async function innerFunction(){
-        let vidURL = props.vidURL;
         poses = await GetPoseAndFrames(vidURL);
 
         //processing the frames and poses
-        console.log(props.mass);
+        console.log(mass);
         console.log(poses);
         CalculateSpinalLoad(poses);
 
-        //changin the video
+        //changing the video
         let loading = document.querySelector("img[alt='loading']");
         let video = document.createElement("video");
         video.setAttribute("src", vidURL);
@@ -39,7 +38,6 @@ export default function VideoOutput(props)
     }
 
     innerFunction();
-    return(<div>Result</div>);
 }
 
 
