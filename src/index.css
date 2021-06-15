@@ -44,3 +44,11 @@ img {
   max-width: 500px;
 }
 
+input[type="number"] {
+  width: 5em;
+  margin-right: 30px;
+}
+
+.input_line {
+  margin-top: 10px;
+}

@@ -3,7 +3,7 @@ import * as posenet from "@tensorflow-models/posenet";
 
 export default async function GetPoseAndFrames(vidURL){
     //break video into frames
-    async function extractFramesFromVideo(videoUrl, fps=25) 
+    async function extractFramesFromVideo(videoUrl, fps=1) 
     {
         return new Promise(async (resolve) => {
       
@@ -70,11 +70,8 @@ export default async function GetPoseAndFrames(vidURL){
     async function processFrames(frames)
     {
         for(let i = 0; i < frames.length; i++){
-            estimatePoseOnImg(frames[i]).then(
-                (value) => {
-                    poses.poseArr.push(value);
-                }
-            );
+            let pose = await estimatePoseOnImg(frames[i]);
+            poses.poseArr.push(pose);
         }
     }
 
@@ -83,12 +80,8 @@ export default async function GetPoseAndFrames(vidURL){
         frames: []
     }
 
-    let result = await extractFramesFromVideo(vidURL, 1).then(
-        (value) => 
-        {
-            poses.frames = value;
-            processFrames(poses.frames);
-        }
-    )
-    console.log(poses);
+    let frames = await extractFramesFromVideo(vidURL, 1);
+    poses.frames = frames;
+    let result = await processFrames(poses.frames);
+    return poses;
 }
