@@ -1,42 +1,32 @@
-import React from 'react';
-import GetPoseAndFrames from './PoseEstimator';
+import getPoseAndFrames from './PoseEstimator';
 import loading from './loading.gif';
-import CalculateSpinalLoad from './SpinalLoadingCalculator';
+import calculateSpinalLoad from './SpinalLoadingCalculator';
+import getVideo from './GetVideo';
 
 let poses;
 
-export default function VideoOutput(vidURL, mass)
+export default function changeVideoOutput(vidURL, mass, height, weight)
 {   
-    let curVideo = document.querySelector("video");
-    if(curVideo !== null)
+    let curLift = document.querySelector("img[alt='lift gif']");
+    if(curLift !== null)
     {
         let curLoading = document.createElement("img");
         curLoading.setAttribute("src", loading);
         curLoading.setAttribute("alt", 'loading');
-        curVideo.replaceWith(curLoading);
+        curLift.replaceWith(curLoading);
     }
     
     async function innerFunction(){
-        poses = await GetPoseAndFrames(vidURL);
+        //getting poses and frames
+        //an object that holds poses.frames(ImageData) and poses.poseArr(poseObjects)
+        poses = await getPoseAndFrames(vidURL);
 
         //processing the frames and poses
-        console.log(mass);
-        console.log(poses);
-        CalculateSpinalLoad(poses);
-
-        //changing the video
-        let loading = document.querySelector("img[alt='loading']");
-        let video = document.createElement("video");
-        video.setAttribute("src", vidURL);
-        video.setAttribute("type", "video/mp4");
-        video.setAttribute("autoPlay", "");
-        video.setAttribute("muted", "");
-        video.setAttribute("controls", "");
-        loading.replaceWith(video);
-        let submit = document.querySelector('button[type="submit"]');
-        submit.removeAttribute("disabled");
+        let spinalLoads = calculateSpinalLoad(poses, mass, height, weight);
+        getVideo(poses, spinalLoads);
     }
 
+    //Main starts here
     innerFunction();
 }
 

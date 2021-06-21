@@ -1,7 +1,7 @@
 import * as tf from "@tensorflow/tfjs";
 import * as posenet from "@tensorflow-models/posenet";
 
-export default async function GetPoseAndFrames(vidURL){
+export default async function getPoseAndFrames(vidURL){
     //break video into frames
     async function extractFramesFromVideo(videoUrl, fps=1) 
     {
@@ -57,7 +57,6 @@ export default async function GetPoseAndFrames(vidURL){
     async function estimatePoseOnImg(imgElement){
         if(imgElement !== null){// load the posenet model from a checkpoint
             const net = await posenet.load();
-        
             const pose = await net.estimateSinglePose(
                 imgElement, 
                 {flipHorizontal: false}
@@ -75,9 +74,10 @@ export default async function GetPoseAndFrames(vidURL){
         }
     }
 
+    //Main starts here
     let poses = {
-        poseArr: [],
-        frames: []
+        poseArr: [], //contains poseObject
+        frames: [] //contains ImageData
     }
 
     let frames = await extractFramesFromVideo(vidURL, 1);
