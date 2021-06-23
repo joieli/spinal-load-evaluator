@@ -24,15 +24,16 @@ export default function VideoInputForm(props){
         let submit = document.querySelector("button[type=submit]");
         let massInput = document.querySelector("#mass");
         let heightInput = document.querySelector("#height");
-        let weightInput = document.querySelector("#weight")
+        let weightInput = document.querySelector("#weight");
+        let refLengthInput = document.querySelector("#ref_length");
 
-        if(!vid.files[0].type.match("video.*") || massInput.value <= 0 || heightInput.value <= 0 || weightInput.value <= 0)
+        if(!vid.files[0].type.match("video.*") || heightInput.value <= 0 || weightInput.value <= 0 || refLengthInput.value <= 0)
         {
 
             if(!vid.files[0].type.match("video.*"))
                 alert("Please upload a video file, some acceptable formats are: .mp4, .m4v, .mov, .avi, .mpg, .webm");
             else
-                alert("Please enter non-zero values for all numerical fields");
+                alert("Please enter non-zero values for upperarm length, height and weight");
             return;
         }
         
@@ -40,6 +41,7 @@ export default function VideoInputForm(props){
         let mass = massInput.value;
         let height = heightInput.value;
         let weight = weightInput.value;
+        let refLength = refLengthInput.value;
         let vidURL = await processVid(vid.files);
         
         props.setVid(true);
@@ -47,16 +49,19 @@ export default function VideoInputForm(props){
         massInput.value = "";
         heightInput.value = "";
         weightInput.value = "";
-        changeVideoOutput(vidURL, mass, height, weight);
+        refLengthInput.value = "";
+        changeVideoOutput(vidURL, mass, height, weight, refLength);
     }
     
     const noVidTemplate = (
         <form className="video_input_form" onSubmit={handleSubmit}>
-            <video width="400px" autoPlay muted loop>
+            <video width="600px" autoPlay muted loop>
                 <source src={noise} type="video/mp4"/>
                 Video not supported on your browser
             </video>
             <div className="input_line">
+                <label htmlFor="ref_length">Length of upper arm (shoulder to elbow)(m): </label>
+                <input type="number" min="0" required id="ref_length" name="ref_length"/>
                 <label htmlFor="mass">Mass of object (kg): </label>
                 <input type="number" min="0" required id="mass" name="mass" />
             </div> 
@@ -78,6 +83,8 @@ export default function VideoInputForm(props){
         <form className="video_input_form" onSubmit={handleSubmit}>
             <img src={loading} alt='loading' />
             <div className="input_line">
+                <label htmlFor="ref_length">Length of upper arm (shoulder to elbow)(m): </label>
+                <input type="number" min="0" required id="ref_length" name="ref_length"/>
                 <label htmlFor="mass">Mass of object (kg): </label>
                 <input type="number" min="0" required id="mass" name="mass" />
             </div> 

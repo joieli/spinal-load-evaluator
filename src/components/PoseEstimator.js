@@ -29,7 +29,7 @@ export default async function getPoseAndFrames(vidURL){
 
             let canvas = document.createElement('canvas');
             let context = canvas.getContext('2d');
-            let scale = 500/video.videoWidth;
+            let scale = 700/video.videoWidth;
             if(scale > 1)
                 scale = 1;
             let [w, h] = [video.videoWidth  * scale, video.videoHeight *scale]
@@ -54,11 +54,11 @@ export default async function getPoseAndFrames(vidURL){
         });
     }
 
-    async function estimatePoseOnImg(imgElement){
-        if(imgElement !== null){// load the posenet model from a checkpoint
+    async function estimatePoseOnImg(imgData){
+        if(imgData !== null){// load the posenet model from a checkpoint
             const net = await posenet.load();
             const pose = await net.estimateSinglePose(
-                imgElement, 
+                imgData, 
                 {flipHorizontal: false}
             );
 
@@ -80,7 +80,7 @@ export default async function getPoseAndFrames(vidURL){
         frames: [] //contains ImageData
     }
 
-    let frames = await extractFramesFromVideo(vidURL, 1);
+    let frames = await extractFramesFromVideo(vidURL, 5);
     poses.frames = frames;
     let result = await processFrames(poses.frames);
     return poses;

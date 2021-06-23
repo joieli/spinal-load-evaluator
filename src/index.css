@@ -9,15 +9,17 @@ html{
 }
 
 /* || GENERAL STYLES */
-body {
+#root {
   text-align: center;
   font-size: 16px;
   margin: 0 auto;
-  padding-block: 60px;
-  padding-inline: 30px;
+  padding-block: 30px;
   box-sizing: border-box;
   width: 700px;
   height: 100%;
+}
+body {
+  margin: 0;
 }
 h1 {
   margin: 0;
@@ -27,7 +29,7 @@ h1 {
 video {
   display: block;
   margin: 1rem auto;
-  max-width: 500px;
+  max-width: 700px;
 }
 
 button[type="submit"] {
@@ -37,7 +39,11 @@ button[type="submit"] {
 img {
   display: block;
   margin: 1rem auto;
-  max-width: 500px;
+  max-width: 700px;
+}
+
+form {
+  width: 100%
 }
 
 input[type="number"] {
@@ -47,6 +53,17 @@ input[type="number"] {
 
 .input_line {
   margin-top: 10px;
-  width: 500px;
+  width: 100%;
   margin-inline: auto;
+}
+
+ul {
+  text-align: left;
+  margin-inline-start: 15%;
+  margin-block: 0;
+}
+
+p {
+  margin-block-end: 0;
+  margin-block-start: 1em;
 }

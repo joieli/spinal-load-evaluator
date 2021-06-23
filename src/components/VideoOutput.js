@@ -5,7 +5,7 @@ import getVideo from './GetVideo';
 
 let poses;
 
-export default function changeVideoOutput(vidURL, mass, height, weight)
+export default function changeVideoOutput(vidURL, mass, height, weight, refLength)
 {   
     let curLift = document.querySelector("img[alt='lift gif']");
     if(curLift !== null)
@@ -22,8 +22,8 @@ export default function changeVideoOutput(vidURL, mass, height, weight)
         poses = await getPoseAndFrames(vidURL);
 
         //processing the frames and poses
-        let spinalLoads = calculateSpinalLoad(poses, mass, height, weight);
-        getVideo(poses, spinalLoads);
+        let spinalLoads = calculateSpinalLoad(poses, mass, height, weight, refLength);
+        getVideo(poses, spinalLoads, height, refLength);
     }
 
     //Main starts here
