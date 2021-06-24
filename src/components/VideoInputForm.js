@@ -1,6 +1,4 @@
 import React from 'react';
-import noise from "./noise.mp4";
-import loading from './loading.gif';
 import changeVideoOutput from './VideoOutput';
 
 export default function VideoInputForm(props){ 
@@ -55,21 +53,17 @@ export default function VideoInputForm(props){
     
     const noVidTemplate = (
         <form className="video_input_form" onSubmit={handleSubmit}>
-            <video width="600px" autoPlay muted loop>
-                <source src={noise} type="video/mp4"/>
-                Video not supported on your browser
-            </video>
             <div className="input_line">
                 <label htmlFor="ref_length">Length of upper arm (shoulder to elbow)(m): </label>
-                <input type="number" min="0" required id="ref_length" name="ref_length"/>
+                <input type="number" min="0" step="any" required id="ref_length" name="ref_length"/>
                 <label htmlFor="mass">Mass of object (kg): </label>
-                <input type="number" min="0" required id="mass" name="mass" />
+                <input type="number" min="0" step="any" required id="mass" name="mass" />
             </div> 
             <div className="input_line">
                 <label htmlFor="height">Your height (m): </label>
-                <input type="number" min="0" required id="height" name="height" />
+                <input type="number" min="0" step="any" required id="height" name="height" />
                 <label htmlFor="weight">Your weight (kg): </label>
-                <input type="number" min="0"required id="weight" name="weight" />
+                <input type="number" min="0" step="any" required id="weight" name="weight" />
             </div>
             <div className="input_line">
                 <label htmlFor="videoFile">Upload a video: </label>
@@ -81,18 +75,17 @@ export default function VideoInputForm(props){
 
     const hasVidTemplate = (
         <form className="video_input_form" onSubmit={handleSubmit}>
-            <img src={loading} alt='loading' />
             <div className="input_line">
                 <label htmlFor="ref_length">Length of upper arm (shoulder to elbow)(m): </label>
-                <input type="number" min="0" required id="ref_length" name="ref_length"/>
+                <input type="number" min="0" step="any" required id="ref_length" name="ref_length"/>
                 <label htmlFor="mass">Mass of object (kg): </label>
-                <input type="number" min="0" required id="mass" name="mass" />
+                <input type="number" min="0" step="any" required id="mass" name="mass" />
             </div> 
             <div className="input_line">
                 <label htmlFor="height" >Your height (m): </label>
-                <input type="number" min="0" required id="height" name="height" />
+                <input type="number" min="0" step="any" required id="height" name="height" />
                 <label htmlFor="weight">Your weight (kg): </label>
-                <input type="number" min="0" required id="weight" name="weight" />
+                <input type="number" min="0" step="any" required id="weight" name="weight" />
             </div>
             <div className="input_line">
                 <label htmlFor="videoFile">Upload a new video: </label>

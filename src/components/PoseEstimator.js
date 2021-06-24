@@ -30,6 +30,7 @@ export default async function getPoseAndFrames(vidURL){
             let canvas = document.createElement('canvas');
             let context = canvas.getContext('2d');
             let scale = 700/video.videoWidth;
+            scale = 1; //<--comment this out later???
             if(scale > 1)
                 scale = 1;
             let [w, h] = [video.videoWidth  * scale, video.videoHeight *scale]
