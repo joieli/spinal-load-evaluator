@@ -3,13 +3,25 @@ import loading from './loading.gif';
 import getVideo from './GetVideo';
 
 //ToDO:
-//  Make getVideo and VideoOutput function prettier, perhaps use some states??
+//  Make getVideo and changeVideoOutput function prettier, perhaps use some states??
 //  Make a videoOutput component??
 
 let poses;
 
 export default function changeVideoOutput(vidURL, mass, weight, refLength)
 {   
+    async function innerFunction(){
+        //getting poses and frames
+        //an object that holds poses.frames(ImageData) and poses.poseArr(poseObjects)
+        console.log("Getting poses");
+        poses = await getPoseAndFrames(vidURL);
+        console.log(poses);
+
+        //processing the frames and poses
+        getVideo(poses, mass, weight, refLength);
+    }
+
+    //Main starts here
     let curLift = document.querySelector("img[alt='lift gif']");
     if(curLift !== null)
     {
@@ -25,18 +37,6 @@ export default function changeVideoOutput(vidURL, mass, weight, refLength)
         download.remove();
     }
     
-    async function innerFunction(){
-        //getting poses and frames
-        //an object that holds poses.frames(ImageData) and poses.poseArr(poseObjects)
-        console.log("Getting poses");
-        poses = await getPoseAndFrames(vidURL);
-        console.log(poses);
-
-        //processing the frames and poses
-        getVideo(poses, mass, weight, refLength);
-    }
-
-    //Main starts here
     innerFunction();
 }
 

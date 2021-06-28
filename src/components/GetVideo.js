@@ -9,7 +9,55 @@ export default function getVideo(poses, mass, weight, refLength)
         //poses.frames holds ImagaData
         //poses.poseArr holds pose objects
     
-    //Main start-----------------------------------------------------------
+    function drawPose(context, i)
+    {
+        let COMs = COMsArr[i];
+        let pose = poses.poseArr[i];
+        let leftShoulder = pose[5].position;
+        let leftElbow = pose[7].position;
+        let leftWrist = pose[9].position;
+        let leftHip = pose[11].position;
+        
+        //joints
+        context.fillStyle = "Red";
+        context.fillRect(leftShoulder.x, leftShoulder.y, sqr, sqr);
+        context.fillRect(leftElbow.x, leftElbow.y, sqr, sqr);
+        context.fillRect(leftHip.x, leftHip.y, sqr, sqr);
+        context.fillRect(leftWrist.x, leftWrist.y, sqr, sqr);
+        
+        //COMS
+        context.fillStyle = "Grey";
+        context.fillRect(COMs.upperArm.x, COMs.upperArm.y, sqr, sqr);
+        context.fillRect(COMs.foreArm.x, COMs.foreArm.y, sqr, sqr);
+        context.fillRect(COMs.head.x, COMs.head.y, sqr, sqr);
+        context.fillRect(COMs.trunk.x, COMs.trunk.y, sqr, sqr);
+        context.fillRect(COMs.hand.x, COMs.hand.y, sqr, sqr);
+ 
+        //l5S1 joint
+        context.fillStyle = "White";
+        context.fillRect(COMs.l5s1.x, COMs.l5s1.y, sqr, sqr);
+    }
+
+    function drawGraph(context, i)
+    {
+        let load = COMsArr[i].l5s1.load;
+        context.font = fontSize.toString() + "px Arial";
+
+        context.fillStyle = "White";
+        context.fillText("MaxLoad: " + Math.round(maxLoad.val) + " N, Frame: " + maxLoad.frame, fontSize/4, h - maxBarHeight - (fontSize/4), w);
+        context.fillText("Load: " + Math.round(load) + " N", fontSize/4, h - maxBarHeight - fontSize * (3/2), w);
+
+        context.fillStyle = "Green";
+        for(let j = 0; j <= i; j++)
+        {
+            let curLoad = COMsArr[j].l5s1.load;
+            context.fillStyle = curLoad < 3432 ? "Green": curLoad < 6500 ? "Yellow" : "Red";
+            let barHeight = Math.min(curLoad/maxLoad.val * maxBarHeight, curLoad/6800 * maxBarHeight);
+            context.fillRect(j * barWidth, h - barHeight, barWidth, barHeight);
+        }
+    }
+
+    //Main starts here
     console.log("Doing Calculations");
     let w = poses.frames[0].width;
     let h = poses.frames[0].height;
@@ -71,8 +119,6 @@ export default function getVideo(poses, mass, weight, refLength)
         zip.file("frame" + i + ".jpg", canvas.toDataURL("image/jpeg").split(';base64,')[1], {base64: true});
     }
 
-    gif.render();
-
     gif.on("finished", function(blob) {
         let gifURL = URL.createObjectURL(blob);
 
@@ -99,53 +145,6 @@ export default function getVideo(poses, mass, weight, refLength)
             console.log("finished");
         });
     });
-    //Main end--------------------------------------------------
-    
-    function drawPose(context, i)
-    {
-        let COMs = COMsArr[i];
-        let pose = poses.poseArr[i];
-        let leftShoulder = pose[5].position;
-        let leftElbow = pose[7].position;
-        let leftWrist = pose[9].position;
-        let leftHip = pose[11].position;
-        
-        //joints
-        context.fillStyle = "Red";
-        context.fillRect(leftShoulder.x, leftShoulder.y, sqr, sqr);
-        context.fillRect(leftElbow.x, leftElbow.y, sqr, sqr);
-        context.fillRect(leftHip.x, leftHip.y, sqr, sqr);
-        context.fillRect(leftWrist.x, leftWrist.y, sqr, sqr);
-        
-        //COMS
-        context.fillStyle = "Grey";
-        context.fillRect(COMs.upperArm.x, COMs.upperArm.y, sqr, sqr);
-        context.fillRect(COMs.foreArm.x, COMs.foreArm.y, sqr, sqr);
-        context.fillRect(COMs.head.x, COMs.head.y, sqr, sqr);
-        context.fillRect(COMs.trunk.x, COMs.trunk.y, sqr, sqr);
-        context.fillRect(COMs.hand.x, COMs.hand.y, sqr, sqr);
- 
-        //l5S1 joint
-        context.fillStyle = "White";
-        context.fillRect(COMs.l5s1.x, COMs.l5s1.y, sqr, sqr);
-    }
 
-    function drawGraph(context, i)
-    {
-        let load = COMsArr[i].l5s1.load;
-        context.font = fontSize.toString() + "px Arial";
-
-        context.fillStyle = "White";
-        context.fillText("MaxLoad: " + Math.round(maxLoad.val) + " N, Frame: " + maxLoad.frame, fontSize/4, h - maxBarHeight - (fontSize/4), w);
-        context.fillText("Load: " + Math.round(load) + " N", fontSize/4, h - maxBarHeight - fontSize * (3/2), w);
-
-        context.fillStyle = "Green";
-        for(let j = 0; j <= i; j++)
-        {
-            let curLoad = COMsArr[j].l5s1.load;
-            context.fillStyle = curLoad < 3432 ? "Green": curLoad < 6500 ? "Yellow" : "Red";
-            let barHeight = Math.min(curLoad/maxLoad.val * maxBarHeight, curLoad/6800 * maxBarHeight);
-            context.fillRect(j * barWidth, h - barHeight, barWidth, barHeight);
-        }
-    }
+    gif.render();
 }
