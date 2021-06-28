@@ -8,9 +8,6 @@ export default function getVideo(poses, mass, weight, refLength)
     //poses is an object
         //poses.frames holds ImagaData
         //poses.poseArr holds pose objects
-
-    //ToDo: 
-    //      Add a dowload frames button?? see: https://www.npmjs.com/package/jszip
     
     //Main start-----------------------------------------------------------
     console.log("Doing Calculations");
@@ -21,7 +18,6 @@ export default function getVideo(poses, mass, weight, refLength)
     });
 
     let zip = new JSZip();
-    let zipURL = "";
 
     let sqr = Math.min(w/30, h/30);
     let fontSize = Math.min(h/15, w/15);
@@ -92,13 +88,11 @@ export default function getVideo(poses, mass, weight, refLength)
 
         zip.generateAsync({type:"blob"})
         .then(function(content) {
-            zipURL = URL.createObjectURL(content);
-            
             let download = document.createElement("button");
             download.textContent = "Download Frames";
             download.onclick = function(event){
                 event.preventDefault();
-                saveAs(zipURL, "frames.zip");
+                saveAs(content, "frames.zip");
             }
             download.id = "download";
             document.querySelector(".App").insertBefore(download, document.querySelector('form'));

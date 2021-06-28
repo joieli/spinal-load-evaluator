@@ -2,6 +2,10 @@ import getPoseAndFrames from './PoseEstimator';
 import loading from './loading.gif';
 import getVideo from './GetVideo';
 
+//ToDO:
+//  Make getVideo and VideoOutput function prettier, perhaps use some states??
+//  Make a videoOutput component??
+
 let poses;
 
 export default function changeVideoOutput(vidURL, mass, weight, refLength)
