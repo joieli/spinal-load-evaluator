@@ -4,7 +4,7 @@ import getVideo from './GetVideo';
 
 let poses;
 
-export default function changeVideoOutput(vidURL, mass, height, weight, refLength)
+export default function changeVideoOutput(vidURL, mass, weight, refLength)
 {   
     let curLift = document.querySelector("img[alt='lift gif']");
     if(curLift !== null)
@@ -20,9 +20,10 @@ export default function changeVideoOutput(vidURL, mass, height, weight, refLengt
         //an object that holds poses.frames(ImageData) and poses.poseArr(poseObjects)
         console.log("Getting poses");
         poses = await getPoseAndFrames(vidURL);
+        console.log(poses);
 
         //processing the frames and poses
-        getVideo(poses, mass, height, weight, refLength);
+        getVideo(poses, mass, weight, refLength);
     }
 
     //Main starts here

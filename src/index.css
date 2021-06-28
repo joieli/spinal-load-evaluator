@@ -29,8 +29,8 @@ h1 {
 video {
   display: block;
   margin: 1rem auto;
-  max-width: 700px;
-  max-height: 600px;
+  max-width: 500px;
+  max-height: 500px;
 }
 
 button[type="submit"] {
@@ -40,8 +40,8 @@ button[type="submit"] {
 img {
   display: block;
   margin: 1rem auto;
-  max-width: 700px;
-  max-height: 600px;
+  max-width: 500px;
+  max-height: 500px;
 }
 
 form {

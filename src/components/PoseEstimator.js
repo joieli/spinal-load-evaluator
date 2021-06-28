@@ -1,4 +1,4 @@
-import * as tf from "@tensorflow/tfjs";
+import * as tf from "@tensorflow/tfjs"; //May not use it, but need for posenet to work
 import * as posenet from "@tensorflow-models/posenet";
 
 export default async function getPoseAndFrames(vidURL){
@@ -29,11 +29,8 @@ export default async function getPoseAndFrames(vidURL){
 
             let canvas = document.createElement('canvas');
             let context = canvas.getContext('2d');
-            let scale = 700/video.videoWidth;
-            scale = 1; //<--comment this out later???
-            if(scale > 1)
-                scale = 1;
-            let [w, h] = [video.videoWidth  * scale, video.videoHeight *scale]
+            let scale = Math.min(1, 500/video.videoWidth, 500/video.videoHeight)
+            let [w, h] = [video.videoWidth * scale, video.videoHeight *scale]
             canvas.width =  w;
             canvas.height = h;
         
@@ -46,8 +43,8 @@ export default async function getPoseAndFrames(vidURL){
                 await new Promise(r => seekResolve=r);
         
                 context.drawImage(video, 0, 0, w, h);
-                let base64ImageData = context.getImageData(0, 0, w, h);
-                frames.push(base64ImageData);
+                let imgData = context.getImageData(0, 0, w, h);
+                frames.push(imgData);
         
                 currentTime += interval;
             }
@@ -83,6 +80,6 @@ export default async function getPoseAndFrames(vidURL){
 
     let frames = await extractFramesFromVideo(vidURL, 5);
     poses.frames = frames;
-    let result = await processFrames(poses.frames);
+    await processFrames(poses.frames);
     return poses;
 }
