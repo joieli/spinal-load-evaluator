@@ -1,5 +1,7 @@
 import createCOMsArr from './Calculations';
 import GIF from "gif.js";
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 export default function getVideo(poses, mass, weight, refLength)
 {
@@ -17,6 +19,9 @@ export default function getVideo(poses, mass, weight, refLength)
     let gif = new GIF({
         workerScript: process.env.PUBLIC_URL + '/gif.worker.js'
     });
+
+    let zip = new JSZip();
+    let zipURL = "";
 
     let sqr = Math.min(w/30, h/30);
     let fontSize = Math.min(h/15, w/15);
@@ -67,7 +72,10 @@ export default function getVideo(poses, mass, weight, refLength)
 
         let fps = 5;
         gif.addFrame(canvas, {delay: 1000/fps});
+        zip.file("frame" + i + ".jpg", canvas.toDataURL("image/jpeg").split(';base64,')[1], {base64: true});
     }
+
+    gif.render();
 
     gif.on("finished", function(blob) {
         let gifURL = URL.createObjectURL(blob);
@@ -80,12 +88,25 @@ export default function getVideo(poses, mass, weight, refLength)
         loading.replaceWith(img);
         let submit = document.querySelector('button[type="submit"]');
         submit.removeAttribute("disabled");
-        console.log("finished");
+
+
+        zip.generateAsync({type:"blob"})
+        .then(function(content) {
+            zipURL = URL.createObjectURL(content);
+            
+            let download = document.createElement("button");
+            download.textContent = "Download Frames";
+            download.onclick = function(event){
+                event.preventDefault();
+                saveAs(zipURL, "frames.zip");
+            }
+            download.id = "download";
+            document.querySelector(".App").insertBefore(download, document.querySelector('form'));
+            console.log("finished");
+        });
     });
-
-    gif.render();
     //Main end--------------------------------------------------
-
+    
     function drawPose(context, i)
     {
         let COMs = COMsArr[i];

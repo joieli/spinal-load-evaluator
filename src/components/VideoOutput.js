@@ -14,6 +14,12 @@ export default function changeVideoOutput(vidURL, mass, weight, refLength)
         curLoading.setAttribute("alt", 'loading');
         curLift.replaceWith(curLoading);
     }
+
+    let download = document.querySelector("#download");
+    if(download !== null)
+    {
+        download.remove();
+    }
     
     async function innerFunction(){
         //getting poses and frames

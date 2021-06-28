@@ -3,8 +3,7 @@ import * as posenet from "@tensorflow-models/posenet";
 
 export default async function getPoseAndFrames(vidURL){
     //break video into frames
-    async function extractFramesFromVideo(videoUrl, fps=1) 
-    {
+    async function extractFramesFromVideo(videoUrl, fps=25) {
         return new Promise(async (resolve) => {
       
             // fully download it first (no buffering):
@@ -20,17 +19,16 @@ export default async function getPoseAndFrames(vidURL){
             video.src = videoObjectUrl;
         
             // workaround chromium metadata bug (https://stackoverflow.com/q/38062864/993683)
-            while((video.duration === Infinity || isNaN(video.duration)) && video.readyState < 2) 
-            {
+            while((video.duration === Infinity || isNaN(video.duration)) && video.readyState < 2) {
                 await new Promise(r => setTimeout(r, 1000));
                 video.currentTime = 10000000*Math.random();
             }
             let duration = video.duration;
-
+        
             let canvas = document.createElement('canvas');
             let context = canvas.getContext('2d');
-            let scale = Math.min(1, 500/video.videoWidth, 500/video.videoHeight)
-            let [w, h] = [video.videoWidth * scale, video.videoHeight *scale]
+            let scale = Math.min(1, 500/video.videoWidth, 500/video.videoHeight);
+            let [w, h] = [video.videoWidth * scale, video.videoHeight * scale];
             canvas.width =  w;
             canvas.height = h;
         
