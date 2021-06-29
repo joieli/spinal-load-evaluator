@@ -1,5 +1,6 @@
 import React from 'react';
-import changeVideoOutput from './VideoOutput';
+import changeVideo from './changeVideo';
+import getPoseAndFrames from './PoseEstimator';
 
 export default function VideoInputForm(props){ 
     
@@ -40,38 +41,24 @@ export default function VideoInputForm(props){
         let refLength = refLengthInput.value;
         let vidURL = await processVid(vid.files);
         
-        props.setVid(true);
+        props.setLoading(true);
+
         vid.value = "";
         massInput.value = "";
         weightInput.value = "";
         refLengthInput.value = "";
-        changeVideoOutput(vidURL, mass, weight, refLength);
-    }
-    
-    const noVidTemplate = (
-        <form className="video_input_form" onSubmit={handleSubmit}>
-            <div className="input_line">
-                <label htmlFor="ref_length">Length of upper arm (shoulder to elbow)(m)*: </label>
-                <input type="number" min="0" step="any" required id="ref_length" name="ref_length"/>
-            </div> 
-            <div className="input_line">
-                <label htmlFor="weight">Your weight (kg): </label>
-                <input type="number" min="0" step="any" required id="weight" name="weight" />
-                <label htmlFor="mass">Mass of object (kg): </label>
-                <input type="number" min="0" step="any" required id="mass" name="mass" />
-            </div>
-            <div className="input_line">
-                <label htmlFor="videoFile">Upload a video: </label>
-                <input type="file" accept="video/*" required id="videoFile" name="videoFile"/>
-                <button type="submit">Submit</button>
-            </div>
-        </form>
-    );
 
-    const hasVidTemplate = (
+        console.log("Getting poses");
+        let poses = await getPoseAndFrames(vidURL);
+        console.log(poses);
+
+        changeVideo(poses, mass, weight, refLength, props.setLoading);
+    }
+
+    const template = (
         <form className="video_input_form" onSubmit={handleSubmit}>
             <div className="input_line">
-                <label htmlFor="ref_length">Length of upper arm (shoulder to elbow)(m)*: </label>
+                <label htmlFor="ref_length">Length of upper arm (shoulder to elbow)(m): </label>
                 <input type="number" min="0" step="any" required id="ref_length" name="ref_length"/>
             </div> 
             <div className="input_line">
@@ -83,10 +70,10 @@ export default function VideoInputForm(props){
             <div className="input_line">
                 <label htmlFor="videoFile">Upload a new video: </label>
                 <input type="file" accept="video/*" required id="videoFile" name="videoFile"/>
-                <button type="submit" disabled>Submit</button>
+                <button type="submit">Submit</button>
             </div>
         </form>
     );
 
-    return(props.hasVid ? hasVidTemplate : noVidTemplate);
+    return(template);
 }

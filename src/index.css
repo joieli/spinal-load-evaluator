@@ -11,7 +11,7 @@ html{
 /* || GENERAL STYLES */
 #root {
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
   margin: 0 auto;
   padding-block: 30px;
   box-sizing: border-box;
@@ -61,11 +61,24 @@ input[type="number"] {
 
 ul {
   text-align: left;
-  margin-inline-start: 15%;
   margin-block: 0;
+  margin-inline-start: 15%;
+}
+
+ul ul {
+  margin-inline-start: 3%;
 }
 
 p {
   margin-block-end: 0;
   margin-block-start: 1em;
+}
+
+.footer {
+  text-align: left;
+  font-size: smaller;
+}
+
+.footer ul {
+  margin-inline-start: 0;
 }

@@ -1,77 +1,72 @@
 import React, {useState} from 'react';
 import VideoInputForm from "./components/VideoInputForm";
+import VideoOutput from "./components/VideoOutput";
 import './App.css';
-import noise from "./components/noise.mp4";
-import loading from './components/loading.gif';
+
 
 export default function App() {
-  const [hasVid, setVid] = useState(false);
+  const [isLoading, setLoading] = useState(false);
 
-  const noVidTemplate = (
+  const template = (
     <div className="App">
-      <h1>Spinal Load Evaluations</h1>
+      <h1>Spinal Load Evaluator</h1>
       <p>Restrictions: </p>
       <ul>
         <li>Record lift from lifter's left side</li>
         <li>Two handed lifts only</li>
         <li>Entire head, trunk(shoulder to hips) and arms must be visible</li>
         <li>No twisting during lift</li>
+        <li>Object being lifted cannot have a long moment arm</li>
         <li>Please limit video length to under 15 seconds</li>
       </ul>
-      <video width="600px" autoPlay muted loop>
-        <source src={noise} type="video/mp4"/>
-        Video not supported on your browser
-      </video>
+      <VideoOutput
+        isLoading={isLoading}
+      />
       <VideoInputForm 
-        hasVid={hasVid} 
-        setVid={setVid}
+        setLoading={setLoading}
       />
       <p>Output Colors: </p>
       <ul>
-        <li>Red: Relevant joints detected by posenet</li>
-        <li>Grey: Body segment center of masses</li>
-        <li>White: The L5/S1 joint</li>
+        <li>Red: Location of relevant parts detected by posenet</li>
+        <li>Grey: Location of body segment center of masses</li>
+        <li>White: Location of the L5/S1 joint</li>
       </ul>
+      <div className="footer">
       <p>Notes: </p>
-      <ul>
-        <li>* Used to determine real-life:on-screen distance ratio</li>
-        <li>Uses a statics based evaluation of force at each frame</li>
-        <li>Force values should be used as an estimation, change in force throughout lift would generally be of more interest</li>
-      </ul>
-    </div>
-  );
-
-  const hasVidTemplate = (
-    <div className="App">
-      <h1>Spinal Load Evaluation</h1>
-      <p>Restrictions: </p>
-      <ul>
-        <li>Record lift from lifter's left side (not mirrored)</li>
-        <li>Two handed lifts only</li>
-        <li>Entire head, trunk(shoulder to hips) and arms must be visible</li>
-        <li>No twisting during lift</li>
-        <li>Please limit video length to under 15 seconds</li>
-      </ul>
-      <img src={loading} alt='loading' />
-      <VideoInputForm 
-        hasVid={hasVid} 
-        setVid={setVid}
-      />
-      <p>Output Colors: </p>
-      <ul>
-        <li>Red: Relevant joints detected by posenet</li>
-        <li>Grey: Body segment center of masses</li>
-        <li>White: The L5/S1 joint</li>
-      </ul>
-      <p>Notes: </p>
-      <ul>
-        <li>* Used to determine real-life:on-screen distance ratio</li>
-        <li>Uses a statics based evaluation of force at each frame</li>
-        <li>Force values should be used as an estimation, change in force throughout lift would generally be of more interest</li>
-      </ul>
+        <ul>
+          <li>Accuracy of force values is dependent on accurate detection of the location of these pody parts:
+            <ul>
+              <li>Left wrist, left elbow, left shoulder, left hip, left ear</li>
+            </ul>
+          </li>
+          <li>Please check that posenet has acurately determined the location of the above body parts in the video
+            <ul>
+              <li>Perfect detection is rare, if the estimation of location is far off, try taking the video again </li>
+              <li>At best, force values should only be used as an estimation. </li>
+              <li>Change in force throughout lift should generally be of more interest.</li>
+            </ul>
+          </li>
+          <li>Program assumes that center of mass of the object being lifted is at the same place as the hand</li>
+          <li>Program assumes that the lift begins at the first fram and ends at the last</li>
+          <li>Upper arm length is used to determine real-life:on-screen distance ratio</li>
+          <li>Uses a 2D statics based evaluation of force at each frame</li>
+          <li>Video output is in the form of a gif, analysis done at 5 fps</li>
+        </ul>
+        <p>Packages and References: </p>
+        <ul>
+          <li>React: <a href="https://reactjs.org/">https://reactjs.org/</a></li> 
+          <li>Posenet: <a href="https://github.com/tensorflow/tfjs-models/tree/master/posenet">https://github.com/tensorflow/tfjs-models/tree/master/posenet</a></li>
+          <li>file-saver: <a href="https://github.com/eligrey/FileSaver.js">https://github.com/eligrey/FileSaver.js</a></li>
+          <li>gif.js: <a href="https://github.com/jnordberg/gif.js">https://github.com/jnordberg/gif.js</a></li>
+          <li>jszip: <a href="https://stuk.github.io/jszip/">https://stuk.github.io/jszip/</a></li>
+          <li>Body segment masses and center of mass: <a href="https://doi.org/10.1080/02701367.1983.10605290">https://doi.org/10.1080/02701367.1983.10605290</a></li>
+          <li>Body Segment Lengths: Winter DA. Biomechanics and motor control of human movement. John Wiley & Sons; 2009. </li>
+          <li>Spinal compression limits: <a href="https://doi.org/10.1080/00140139308967899">https://doi.org/10.1080/00140139308967899</a></li>
+        </ul>
+      </div>
     </div>
   );
   
-  return (hasVid ? hasVidTemplate : noVidTemplate);
+  return (template);
 }
 

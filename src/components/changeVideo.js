@@ -3,7 +3,7 @@ import GIF from "gif.js";
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
-export default function getVideo(poses, mass, weight, refLength)
+export default function changeVideo(poses, mass, weight, refLength, setLoading)
 {
     //poses is an object
         //poses.frames holds ImagaData
@@ -120,28 +120,26 @@ export default function getVideo(poses, mass, weight, refLength)
     }
 
     gif.on("finished", function(blob) {
+        
+        setLoading(false);
         let gifURL = URL.createObjectURL(blob);
 
-        //changing the video
-        let loading = document.querySelector("img[alt='loading']");
-        let img = document.createElement("img");
-        img.src = gifURL;
-        img.alt = "lift gif"
-        loading.replaceWith(img);
+        let lift = document.querySelector("#lift");
+        lift.src = gifURL;
+        lift.alt = "lift";
+
         let submit = document.querySelector('button[type="submit"]');
         submit.removeAttribute("disabled");
 
 
         zip.generateAsync({type:"blob"})
         .then(function(content) {
-            let download = document.createElement("button");
-            download.textContent = "Download Frames";
+            let download = document.querySelector("#download");
             download.onclick = function(event){
                 event.preventDefault();
                 saveAs(content, "frames.zip");
             }
-            download.id = "download";
-            document.querySelector(".App").insertBefore(download, document.querySelector('form'));
+            download.removeAttribute("disabled");
             console.log("finished");
         });
     });

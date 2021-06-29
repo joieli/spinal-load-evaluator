@@ -1,46 +1,23 @@
-import getPoseAndFrames from './PoseEstimator';
 import loading from './loading.gif';
-import getVideo from './GetVideo';
+import noise from './noise.gif';
 
-//ToDO:
-//  Make getVideo and changeVideoOutput function prettier, perhaps use some states??
-//  Make a videoOutput component??
+export default function VideoOutput(props)
+{
+    let isLoadingTemplate = (
+        <div id="video_output">
+            <img src={loading} alt='loading' />
+        </div>
+    );
 
-let poses;
+    let notLoadingTemplate = (
+        <div id="video_output">
+            <img src={noise} alt='temp' id="lift" />
+            <button id="download" disabled>Download Frames</button>
+        </div>
+    );
 
-export default function changeVideoOutput(vidURL, mass, weight, refLength)
-{   
-    async function innerFunction(){
-        //getting poses and frames
-        //an object that holds poses.frames(ImageData) and poses.poseArr(poseObjects)
-        console.log("Getting poses");
-        poses = await getPoseAndFrames(vidURL);
-        console.log(poses);
-
-        //processing the frames and poses
-        getVideo(poses, mass, weight, refLength);
-    }
-
-    //Main starts here
-    let curLift = document.querySelector("img[alt='lift gif']");
-    if(curLift !== null)
-    {
-        let curLoading = document.createElement("img");
-        curLoading.setAttribute("src", loading);
-        curLoading.setAttribute("alt", 'loading');
-        curLift.replaceWith(curLoading);
-    }
-
-    let download = document.querySelector("#download");
-    if(download !== null)
-    {
-        download.remove();
-    }
-    
-    innerFunction();
+    return(props.isLoading ? isLoadingTemplate : notLoadingTemplate)
 }
-
-
 
 
 

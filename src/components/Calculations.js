@@ -93,7 +93,7 @@ function addLoads(COMs, refToScreenRatio)
     let headM = headFy * headDx;
     let trunkM = trunkFy * trunkDx;
     let handM = handFy * handDx;
-    let totalM = upperArmM + foreArmM + headM + handM + trunkM;
+    let totalM = (upperArmM + foreArmM + handM) * 2 + headM + trunkM;
 
     COMs.upperArm.Mo = upperArmM;
     COMs.foreArm.Mo = foreArmM;
@@ -102,6 +102,6 @@ function addLoads(COMs, refToScreenRatio)
     COMs.hand.Mo = handM;
     COMs.l5s1.totalMo = totalM;
 
-    let spinalLoad = upperArmFy + foreArmFy + headFy + trunkFy + handFy + totalM/0.05;
+    let spinalLoad = (upperArmFy + foreArmFy + handFy) * 2 + headFy + trunkFy + totalM/0.05;
     COMs.l5s1.load = spinalLoad;
 }
