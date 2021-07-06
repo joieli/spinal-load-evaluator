@@ -1,24 +1,42 @@
-import createCOMsArr from './Calculations';
+import createCOMsArr from './calculations';
 import GIF from "gif.js";
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
+/**
+ * object containing video frame and pose data arrays
+ * @typedef {Object} Poses
+ * @property {ImageData[]} frames - array containing the frames of the video
+ * @property {Array} poseArr - array containing the posenet pose data at each frame, see posenet documentation for more info about pose data
+*/
+
+/**
+ * replaces the loading gif with a gif of the evaluated lift
+ * @param {Poses} poses - video frame and pose data for the lift evaluated
+ * @param {number} mass - mass of the object being lifted in kg
+ * @param {number} weight - lifters mass in kg
+ * @param {number} refLength - the distance between the shoulder and elbow in real life in m
+ * @param {Function} setLoading - the function to set the isLoading state
+*/
 export default function changeVideo(poses, mass, weight, refLength, setLoading)
 {
-    //poses is an object
-        //poses.frames holds ImagaData
-        //poses.poseArr holds pose objects
-    
+    /**
+     * Function to draw COMs and posenet joint locations on a given frame
+     * @param {CanvasRenderingContext2D} context - canvas context for target frame
+     * @param {number} i - frame number
+     */
     function drawPose(context, i)
     {
         let COMs = COMsArr[i];
         let pose = poses.poseArr[i];
+
+        //getting position of posenet joints
         let leftShoulder = pose[5].position;
         let leftElbow = pose[7].position;
         let leftWrist = pose[9].position;
         let leftHip = pose[11].position;
         
-        //joints
+        //posenet joints
         context.fillStyle = "Red";
         context.fillRect(leftShoulder.x, leftShoulder.y, sqr, sqr);
         context.fillRect(leftElbow.x, leftElbow.y, sqr, sqr);
@@ -38,15 +56,22 @@ export default function changeVideo(poses, mass, weight, refLength, setLoading)
         context.fillRect(COMs.l5s1.x, COMs.l5s1.y, sqr, sqr);
     }
 
-    function drawGraph(context, i)
+    /**
+     * function to draw the l5s1 load bar graph on a given frame
+     * @param {CanvasRenderingContext2D} context - canvas context for target frame
+     * @param {number} i - frame number
+     */
+    function drawLoad(context, i)
     {
         let load = COMsArr[i].l5s1.load;
         context.font = fontSize.toString() + "px Arial";
 
+        //Writing the maxLoad and current load to canvas
         context.fillStyle = "White";
-        context.fillText("MaxLoad: " + Math.round(maxLoad.val) + " N, Frame: " + maxLoad.frame, fontSize/4, h - maxBarHeight - (fontSize/4), w);
+        context.fillText("maxLoad: " + Math.round(maxLoad.val) + " N, Frame: " + maxLoad.frame, fontSize/4, h - maxBarHeight - (fontSize/4), w);
         context.fillText("Load: " + Math.round(load) + " N", fontSize/4, h - maxBarHeight - fontSize * (3/2), w);
 
+        //Drawing the graph
         context.fillStyle = "Green";
         for(let j = 0; j <= i; j++)
         {
@@ -57,32 +82,33 @@ export default function changeVideo(poses, mass, weight, refLength, setLoading)
         }
     }
 
-    //Main starts here
-    console.log("Doing Calculations");
-    let w = poses.frames[0].width;
-    let h = poses.frames[0].height;
+    //Main starts here----------------------------------
     let gif = new GIF({
         workerScript: process.env.PUBLIC_URL + '/gif.worker.js'
     });
-
     let zip = new JSZip();
 
+    //Calculating the size of important elements to draw on canvas
+    console.log("Doing Calculations");
+    let w = poses.frames[0].width;
+    let h = poses.frames[0].height;
     let sqr = Math.min(w/30, h/30);
     let fontSize = Math.min(h/15, w/15);
-
     let frameNumber = poses.frames.length;
     let barWidth = Math.ceil(w/frameNumber);
     let maxBarHeight = h/10
 
+    //Calculating refToScreenRatio
     let shoulder = poses.poseArr[0][5].position;
     let elbow = poses.poseArr[0][7].position;
     let screenLength = Math.sqrt((elbow.x - shoulder.x)**2 + (elbow.y - shoulder.y)**2);
     let refToScreenRatio = refLength/screenLength; // px:m
-    console.log("RefToScreenRatio: " + refToScreenRatio);
+    console.log("refToScreenRatio: " + refToScreenRatio);
 
     let COMsArr = createCOMsArr(poses, mass, weight, refToScreenRatio);
     console.log(COMsArr);
-    
+
+    //Finding the maximum load and at which frame it occurs
     let maxLoad = {
         val: 0,
         frame: -1
@@ -100,30 +126,32 @@ export default function changeVideo(poses, mass, weight, refLength, setLoading)
     for(let i = 0; i < poses.frames.length; i++)
     {
         let imgData = poses.frames[i];
-    
+        
+        //creating a canvas for the frame
         let canvas = document.createElement('canvas');
         canvas.width = w;
         canvas.height = h;
         let context = canvas.getContext('2d');
-        context.putImageData(imgData, 0, 0);
         
+        //Writing the frame number to canvas
+        context.putImageData(imgData, 0, 0);
         context.font = fontSize.toString() + "px Arial";
         context.fillStyle = "White";
         context.fillText("Frame: " + i, fontSize/4, fontSize, w);
 
         drawPose(context, i);
-        drawGraph(context, i);
+        drawLoad(context, i);
 
+        //Adding the frame to the gif and zip
         let fps = 5;
         gif.addFrame(canvas, {delay: 1000/fps});
         zip.file("frame" + i + ".jpg", canvas.toDataURL("image/jpeg").split(';base64,')[1], {base64: true});
     }
 
     gif.on("finished", function(blob) {
-        
+        //Changing the video
         setLoading(false);
         let gifURL = URL.createObjectURL(blob);
-
         let lift = document.querySelector("#lift");
         lift.src = gifURL;
         lift.alt = "lift";
@@ -131,7 +159,7 @@ export default function changeVideo(poses, mass, weight, refLength, setLoading)
         let submit = document.querySelector('button[type="submit"]');
         submit.removeAttribute("disabled");
 
-
+        //Creating the download frames button
         zip.generateAsync({type:"blob"})
         .then(function(content) {
             let download = document.querySelector("#download");
@@ -144,5 +172,6 @@ export default function changeVideo(poses, mass, weight, refLength, setLoading)
         });
     });
 
+    //Call the gif finished event (see above)
     gif.render();
 }

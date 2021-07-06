@@ -1,6 +1,6 @@
 import React from 'react';
 import changeVideo from './changeVideo';
-import getPoseAndFrames from './PoseEstimator';
+import getPoseAndFrames from './getPoseAndFrames';
 
 export default function VideoInputForm(props){ 
     
@@ -25,24 +25,23 @@ export default function VideoInputForm(props){
         let weightInput = document.querySelector("#weight");
         let refLengthInput = document.querySelector("#ref_length");
 
+        //validating form
         if(!vid.files[0].type.match("video.*") || weightInput.value <= 0 || refLengthInput.value <= 0)
         {
-
             if(!vid.files[0].type.match("video.*"))
                 alert("Please upload a video file, some acceptable formats are: .mp4, .m4v, .mov, .avi, .mpg, .webm");
             else
                 alert("Please enter non-zero values for upper arm length and weight");
             return;
         }
-        
-        submit.setAttribute("disabled", '');
+
         let mass = massInput.value;
         let weight = weightInput.value;
         let refLength = refLengthInput.value;
         let vidURL = await processVid(vid.files);
         
         props.setLoading(true);
-
+        submit.setAttribute("disabled", '');
         vid.value = "";
         massInput.value = "";
         weightInput.value = "";

@@ -1,9 +1,26 @@
-import * as tf from "@tensorflow/tfjs"; //May not use it, but need for posenet to work
+import * as tf from "@tensorflow/tfjs"; //Not used but need for posenet to work
 import * as posenet from "@tensorflow-models/posenet";
 
+/**
+ * object containing video frame and pose data arrays
+ * @typedef {Object} Poses
+ * @property {ImageData[]} frames - array containing the frames of the video at 5fps
+ * @property {Array} poseArr - array containing the posenet pose data at each frame, see posenet documentation for more info about pose data
+*/
+
+/**
+ * splits the video into frames at 5fps and returns ImageData and posenet pose data at each frame
+ * @param {string} vidURL - dataURL of the video
+ * @returns {Poses} video frame and pose data for the lift evaluated at 5fps
+*/
 export default async function getPoseAndFrames(vidURL){
-    //break video into frames
-    async function extractFramesFromVideo(videoUrl, fps=25) {
+    /**
+     * breaks the video in frames
+     * @param {string} videoUrl - dataURL of the video
+     * @param {number} fps - frame rate to break video at (defaults to 5)
+     * @returns 
+    */
+    async function extractFramesFromVideo(videoUrl, fps=5) {
         return new Promise(async (resolve) => {
       
             // fully download it first (no buffering):
@@ -36,6 +53,7 @@ export default async function getPoseAndFrames(vidURL){
             let interval = 1 / fps;
             let currentTime = 0;
         
+            //getting image data at each frame
             while(currentTime < duration) {
                 video.currentTime = currentTime;
                 await new Promise(r => seekResolve=r);
@@ -50,8 +68,13 @@ export default async function getPoseAndFrames(vidURL){
         });
     }
 
+    /**
+     * uses posenet to get pose data for the given frame
+     * @param {ImageData} imgData - ImageData of frame to pass to posenet
+     * @returns {posenet.Keypoint[]} pose data for the frame
+    */
     async function estimatePoseOnImg(imgData){
-        if(imgData !== null){// load the posenet model from a checkpoint
+        if(imgData !== null){
             const net = await posenet.load();
             const pose = await net.estimateSinglePose(
                 imgData, 
@@ -61,7 +84,11 @@ export default async function getPoseAndFrames(vidURL){
             return (pose.keypoints);
         }
     }
- 
+
+    /**
+     * adds posenet pose data for each frame to poses.poseArr
+     * @param {ImageData[]} frames - array containing frames of the video
+    */
     async function processFrames(frames)
     {
         for(let i = 0; i < frames.length; i++){
@@ -70,9 +97,9 @@ export default async function getPoseAndFrames(vidURL){
         }
     }
 
-    //Main starts here
+    //Main starts here----------------------------------------------------------------
     let poses = {
-        poseArr: [], //contains poseObject
+        poseArr: [], //contains pose
         frames: [] //contains ImageData
     }
 

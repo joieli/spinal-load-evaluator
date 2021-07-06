@@ -1,28 +1,63 @@
+/**
+ * object containing video frame and pose data arrays
+ * @typedef {Object} Poses
+ * @property {ImageData[]} frames - array containing the frames of the video
+ * @property {Array} poseArr - array containing the posenet pose data at each frame, see posenet documentation for more info about pose data
+*/
+
+/**
+ * various data for a body part
+ * @typedef {Object} BodyPart
+ * @property {number} x - x coordinate of the COM of the body part
+ * @property {number} y - y coordinate of the COM of the body part
+ * @property {number} mass - mass of the body part in kg
+ * @property {number} Fy - weight of the body part in kg
+ * @property {number} Dx - horizontal distance between the body part ad the l5s1 joint in m
+ * @property {number} Mo - moment caused by the body part in Nm
+*/
+
+/**
+ * various data for a joint
+ * @typedef {Object} Joint
+ * @property {number} x - x coordinate of the joint
+ * @property {number} y - y coordinate of the joint
+ * @property {number} totalMo - total moment caused by the body around the joint in Nm
+ * @property {number} load - total compressive load at the joint in N
+ */
+
+/**
+ * various center of mass data for a body (and l5s1 joint data)
+ * @typedef {Object} COMs
+ * @property {BodyPart} upperArm
+ * @property {BodyPart} foreArm
+ * @property {BodyPart} head
+ * @property {BodyPart} hand - .mass, .Fy, and .Mo also include the mass of the object being lifted
+ * @property {BodyPart} trunk
+ * @property {Joint} l5s1
+*/
+
+/**
+ * returns an array of COMs for each pose in poses
+ * @param {Poses} poses - video frame and pose data for the lift evaluated at 5fps
+ * @param {number} mass - mass of the object being lifted in kg
+ * @param {number} weight - lifters mass in kg
+ * @param {number} refToScreenRatio - real-life:on-screen ratio in px:m
+ * @returns {COMs[]} array of COMs objects
+*/
 export default function createCOMsArr(poses, mass, weight, refToScreenRatio)
 {
-    //outputs COMsArr:
-    //  Array containing the COMs objects for important body parts at each frame
-    //  COMs objects hold properties for upperArm, foreArm, head, trunk, and, l5s1
-    //  Body part properties:
-    //      x and y: COM pixel location, location for l5s1
-    //      mass: excl. l5s1, body part mass (hand includes mass of lift object)
-    //      Fy: excl. l5s1, body part weight (hand includes weight of lift object)
-    //      Dx: excl. l5s1, horizontal distance between body part COM and l5s1
-    //      Mo: excl. l5s1, moment caused by body part
-    //      totalMo: l5s1 only, total moment caused by body parts around l5s1 joint
-    //      load: l5s1 only, compressive force at l5s1 joint
     let COMsArr = [];
     for(let i = 0; i < poses.frames.length; i++)
     {
-        //Setting up objects:
+        //Getting position of important posenet joints
         let pose = poses.poseArr[i];
         let leftShoulder = pose[5].position;
         let leftElbow = pose[7].position;
         let leftWrist = pose[9].position;
         let leftHip = pose[11].position;
         let leftEar = pose[3].position;
-        
-        //Getting Data
+
+        //Setting up COMs with position and mass
         let COMs = {
             upperArm: {
                 x: leftShoulder.x - (leftShoulder.x - leftElbow.x) * 0.447,
@@ -62,8 +97,15 @@ export default function createCOMsArr(poses, mass, weight, refToScreenRatio)
     return COMsArr;
 }
 
+
+/**
+ * adds Fy, Dx, Mo, totalMo and load data to a COMs object
+ * @param {COMs} COMs - a COMs object
+ * @param {number} refToScreenRatio - real-life:on-screen ratio in px:m
+ */
 function addLoads(COMs, refToScreenRatio)
 {
+    // Force data
     let upperArmFy = COMs.upperArm.mass * 9.81;
     let foreArmFy = COMs.foreArm.mass * 9.81;
     let headFy = COMs.head.mass * 9.81;
@@ -76,6 +118,7 @@ function addLoads(COMs, refToScreenRatio)
     COMs.trunk.Fy = trunkFy;
     COMs.hand.Fy = handFy;
     
+    // Distance data
     let upperArmDx = -(COMs.upperArm.x - COMs.l5s1.x) * refToScreenRatio;
     let foreArmDx = -(COMs.foreArm.x - COMs.l5s1.x) * refToScreenRatio;
     let headDx = -(COMs.head.x - COMs.l5s1.x) * refToScreenRatio;
@@ -88,6 +131,7 @@ function addLoads(COMs, refToScreenRatio)
     COMs.trunk.Dx = trunkDx;
     COMs.hand.Dx = handDx;
 
+    //Moment data
     let upperArmM = upperArmFy * upperArmDx;
     let foreArmM = foreArmFy * foreArmDx;
     let headM = headFy * headDx;
@@ -102,6 +146,7 @@ function addLoads(COMs, refToScreenRatio)
     COMs.hand.Mo = handM;
     COMs.l5s1.totalMo = totalM;
 
+    //L5S1 load data
     let spinalLoad = (upperArmFy + foreArmFy + handFy) * 2 + headFy + trunkFy + totalM/0.05;
     COMs.l5s1.load = spinalLoad;
 }
