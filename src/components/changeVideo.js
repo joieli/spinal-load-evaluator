@@ -90,6 +90,11 @@ export default function changeVideo(poses, mass, weight, refLength, setLoading)
 
     //Calculating the size of important elements to draw on canvas
     console.log("Doing Calculations");
+    console.log("refLength: " + refLength);
+    console.log("weight: " + weight);
+    console.log("mass: " + mass);
+    
+    //Calculating the size of important elements to draw on canvas
     let w = poses.frames[0].width;
     let h = poses.frames[0].height;
     let sqr = Math.min(w/30, h/30);
@@ -172,6 +177,6 @@ export default function changeVideo(poses, mass, weight, refLength, setLoading)
         });
     });
 
-    //Call the gif finished event (see above)
+    //Calls the gif finished event (see above)
     gif.render();
 }

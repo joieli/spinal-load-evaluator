@@ -3,7 +3,6 @@ import changeVideo from './changeVideo';
 import getPoseAndFrames from './getPoseAndFrames';
 
 export default function VideoInputForm(props){ 
-    
     async function processVid(vidFiles){
         let result = await new Promise(
             (resolve) => {
@@ -12,7 +11,6 @@ export default function VideoInputForm(props){
                 reader.readAsDataURL(vidFiles[0]);
             }
         )
-
         return result;
     }
     
