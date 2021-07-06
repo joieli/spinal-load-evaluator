@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/spinal-loading-calculator/static/css/main.68666e7e.chunk.css",
+    "main.js": "/spinal-loading-calculator/static/js/main.9c19b234.chunk.js",
+    "main.js.map": "/spinal-loading-calculator/static/js/main.9c19b234.chunk.js.map",
+    "runtime-main.js": "/spinal-loading-calculator/static/js/runtime-main.92a57298.js",
+    "runtime-main.js.map": "/spinal-loading-calculator/static/js/runtime-main.92a57298.js.map",
+    "static/js/2.e676a292.chunk.js": "/spinal-loading-calculator/static/js/2.e676a292.chunk.js",
+    "static/js/2.e676a292.chunk.js.map": "/spinal-loading-calculator/static/js/2.e676a292.chunk.js.map",
+    "static/js/3.6067ee49.chunk.js": "/spinal-loading-calculator/static/js/3.6067ee49.chunk.js",
+    "static/js/3.6067ee49.chunk.js.map": "/spinal-loading-calculator/static/js/3.6067ee49.chunk.js.map",
+    "index.html": "/spinal-loading-calculator/index.html",
+    "static/css/main.68666e7e.chunk.css.map": "/spinal-loading-calculator/static/css/main.68666e7e.chunk.css.map",
+    "static/js/2.e676a292.chunk.js.LICENSE.txt": "/spinal-loading-calculator/static/js/2.e676a292.chunk.js.LICENSE.txt",
+    "static/media/loading.ee7e6982.gif": "/spinal-loading-calculator/static/media/loading.ee7e6982.gif",
+    "static/media/noise.5cb9fa79.gif": "/spinal-loading-calculator/static/media/noise.5cb9fa79.gif"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.92a57298.js",
+    "static/js/2.e676a292.chunk.js",
+    "static/css/main.68666e7e.chunk.css",
+    "static/js/main.9c19b234.chunk.js"
+  ]
+}
