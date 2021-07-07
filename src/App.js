@@ -10,6 +10,13 @@ export default function App() {
   const template = (
     <div className="App">
       <h1>Spinal Load Evaluator</h1>
+      <p><a href="https://joieli.github.io/spinal-load-evaluator/">GitHub Repo and Demo Video</a></p>
+      <VideoOutput
+        isLoading={isLoading}
+      />
+      <VideoInputForm
+        setLoading={setLoading}
+      />
       <p>Restrictions: </p>
       <ul>
         <li>Record lift from lifter's left side</li>
@@ -19,12 +26,6 @@ export default function App() {
         <li>Object being lifted cannot have a long moment arm</li>
         <li>Please limit video length to under 15 seconds</li>
       </ul>
-      <VideoOutput
-        isLoading={isLoading}
-      />
-      <VideoInputForm 
-        setLoading={setLoading}
-      />
       <p>Output Colors: </p>
       <ul>
         <li>Red: Location of relevant parts detected by posenet</li>
