@@ -8,8 +8,7 @@ Other packages used:
 &nbsp;&nbsp;&nbsp;&nbsp; - file-saver  
 &nbsp;&nbsp;&nbsp;&nbsp; - jszip  
 
+See at: https://joieli.github.io/spinal-load-evaluator/
 
-https://user-images.githubusercontent.com/83305630/124698747-afc82900-dea6-11eb-9a26-82a2f06de43e.mp4
+https://user-images.githubusercontent.com/83305630/124799408-bf308c00-df11-11eb-99ec-260203a409c4.mp4
 
-
-Demo: https://joieli.github.io/spinal-load-evaluator/
