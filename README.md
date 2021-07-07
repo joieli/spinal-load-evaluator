@@ -10,5 +10,5 @@ Other packages used:
 
 See at: https://joieli.github.io/spinal-load-evaluator/
 
-https://user-images.githubusercontent.com/83305630/124799408-bf308c00-df11-11eb-99ec-260203a409c4.mp4
+https://user-images.githubusercontent.com/83305630/124805021-2fdaa700-df18-11eb-85d9-3ec57e233d6d.mp4
 
