@@ -24,6 +24,7 @@ export default function App() {
         <li>Entire head, trunk(shoulder to hips) and arms must be visible</li>
         <li>No twisting during lift</li>
         <li>Object being lifted cannot have a long moment arm</li>
+        <li>No more than one person in frame at a time</li>
         <li>Please limit video length to under 15 seconds</li>
       </ul>
       <p>Output Colors: </p>
