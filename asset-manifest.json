@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/spinal-load-evaluator/static/css/main.77b554bb.chunk.css",
-    "main.js": "/spinal-load-evaluator/static/js/main.b93393ab.chunk.js",
-    "main.js.map": "/spinal-load-evaluator/static/js/main.b93393ab.chunk.js.map",
+    "main.js": "/spinal-load-evaluator/static/js/main.388197b0.chunk.js",
+    "main.js.map": "/spinal-load-evaluator/static/js/main.388197b0.chunk.js.map",
     "runtime-main.js": "/spinal-load-evaluator/static/js/runtime-main.8faba3a0.js",
     "runtime-main.js.map": "/spinal-load-evaluator/static/js/runtime-main.8faba3a0.js.map",
     "static/js/2.e676a292.chunk.js": "/spinal-load-evaluator/static/js/2.e676a292.chunk.js",
@@ -19,6 +19,6 @@
     "static/js/runtime-main.8faba3a0.js",
     "static/js/2.e676a292.chunk.js",
     "static/css/main.77b554bb.chunk.css",
-    "static/js/main.b93393ab.chunk.js"
+    "static/js/main.388197b0.chunk.js"
   ]
 }
