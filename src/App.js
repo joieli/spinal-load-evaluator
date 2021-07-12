@@ -10,7 +10,7 @@ export default function App() {
   const template = (
     <div className="App">
       <h1>Spinal Load Evaluator</h1>
-      <p><a href="https://joieli.github.io/spinal-load-evaluator/">GitHub Repo and Demo Video</a></p>
+      <p><a href="https://github.com/joieli/spinal-load-evaluator">GitHub Repo and Demo Video</a></p>
       <VideoOutput
         isLoading={isLoading}
       />
